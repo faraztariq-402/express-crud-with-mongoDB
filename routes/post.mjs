@@ -63,34 +63,37 @@ for(let i = 0; i<posts.length; i++){
   res.send(`post not found with id ` + req.params.postId)
 }
   }) 
-  router.put('/post/:postId', (req, res, next) => {
-  const postId = req.params.postId;
- 
-
-  for (let i = 0; i < posts.length; i++) {
-    if (posts[i].id === postId) {
-      if (req.body.title) {
-        posts[i].title = req.body.title;
-      }
-      if (req.body.text) {
-        posts[i].text = req.body.text;
-      }
+  router.put('/post/:postId', async (req, res, next) => {
+    const postId = req.params.postId;
+  
+    const filter = { id: postId };
+    const update = {};
+  
+    if (req.body.title) {
+      update.title = req.body.title;
+    }
+    if (req.body.text) {
+      update.text = req.body.text;
+    }
+  
+    const updateResponse = await col.updateOne(filter, { $set: update });
+  
+    if (updateResponse.modifiedCount === 1) {
       res.send('Post edited successfully');
-      return;
+    } else {
+      res.status(404).send(`Error in editing Post with id ${postId}`);
     }
-  }
+  });
+router.delete('/post/:postId', async (req, res, next) => {
+  const postId = req.params.postId
 
-  res.status(404).send(`Error in editing Post with id ${req.params.postId}`);
-});
- router.delete('/post/:postId', (req,res,next)=>{
-  for(let i = 0;i <posts.length; i++){
-    if(posts[i].id === req.params.postId){
-      posts.splice(i, 1)
-      res.send('post deleted')
-    }
+  const deleteResponse = await col.deleteOne({ id: postId });
+  if (deleteResponse.deletedCount === 1) {
+    res.send('Post deleted successfully');
+  } else {
+    res.status(404).send(`Error in deleting Post with id ${postId}`);
   }
-  res.send("Error in deleting Post with id" + req.params.postId)
- })
+});
 
 
   export default router

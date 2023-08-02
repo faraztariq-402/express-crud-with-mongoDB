@@ -2,7 +2,7 @@
   "name": "express-crud-with-mongodb",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server.mjs",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.mjs",
@@ -11,7 +11,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "cors": "^2.8.5",
     "express": "^4.18.2",
+    "mongodb": "^5.7.0",
+    "nanoid": "^4.0.2",
     "nodemon": "^3.0.1"
   }
 }
